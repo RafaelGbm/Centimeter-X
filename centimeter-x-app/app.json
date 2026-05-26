@@ -1,0 +1,60 @@
+{
+  "expo": {
+    "name": "Centimeter-X",
+    "slug": "centimeter-x-app",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/logo mini.png",
+    "scheme": "centimeterx",
+    "userInterfaceStyle": "light",
+    "newArchEnabled": true,
+    "ios": {
+      "supportsTablet": true,
+      "infoPlist": {
+        "NSLocationWhenInUseUsageDescription": "O Centimeter-X usa sua localização para georreferenciar ocorrências de campo e estimar a estação-base GNSS mais próxima.",
+        "NSCameraUsageDescription": "O Centimeter-X usa a câmera para anexar evidências visuais às ocorrências de campo."
+      }
+    },
+    "android": {
+      "adaptiveIcon": {
+        "backgroundColor": "#0A1730",
+        "foregroundImage": "./assets/logo mini.png"
+      },
+      "permissions": [
+        "ACCESS_FINE_LOCATION",
+        "ACCESS_COARSE_LOCATION",
+        "CAMERA"
+      ],
+      "predictiveBackGestureEnabled": false
+    },
+    "web": {
+      "favicon": "./assets/favicon.png"
+    },
+    "plugins": [
+      [
+        "expo-splash-screen",
+        {
+          "image": "./assets/logo.png",
+          "imageWidth": 240,
+          "resizeMode": "contain",
+          "backgroundColor": "#0A1730"
+        }
+      ],
+      [
+        "expo-location",
+        {
+          "locationWhenInUsePermission": "O Centimeter-X usa sua localização para georreferenciar ocorrências de campo."
+        }
+      ],
+      [
+        "expo-camera",
+        {
+          "cameraPermission": "O Centimeter-X usa a câmera para anexar evidências visuais às ocorrências."
+        }
+      ]
+    ],
+    "extra": {
+      "apiBaseUrl": "http://localhost:8080/api/v1"
+    }
+  }
+}
