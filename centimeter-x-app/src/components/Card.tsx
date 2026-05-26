@@ -1,0 +1,33 @@
+import type { ReactNode } from 'react';
+import { Pressable, StyleSheet, View, type StyleProp, type ViewStyle } from 'react-native';
+import { colors, radius, shadow, spacing } from '../theme';
+
+interface Props {
+  children: ReactNode;
+  onPress?: () => void;
+  style?: StyleProp<ViewStyle>;
+  elevated?: boolean;
+}
+
+export function Card({ children, onPress, style, elevated = true }: Props) {
+  const base = [styles.card, elevated && shadow.card, style];
+  if (onPress) {
+    return (
+      <Pressable onPress={onPress} style={({ pressed }) => [...base, pressed && styles.pressed]}>
+        {children}
+      </Pressable>
+    );
+  }
+  return <View style={base}>{children}</View>;
+}
+
+const styles = StyleSheet.create({
+  card: {
+    backgroundColor: colors.surface,
+    borderRadius: radius.lg,
+    borderWidth: 1,
+    borderColor: colors.borderSoft,
+    padding: spacing.md,
+  },
+  pressed: { opacity: 0.9, transform: [{ scale: 0.99 }] },
+});
