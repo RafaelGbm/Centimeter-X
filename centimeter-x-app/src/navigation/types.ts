@@ -14,7 +14,7 @@ export type MainTabParamList = {
 export type AppStackParamList = {
   Tabs: NavigatorScreenParams<MainTabParamList>;
   RoverDetail: { roverId: number };
-  RoverForm: undefined;
+  RoverForm: { roverId?: number } | undefined;
   SessionStatus: { sessionId: number };
   NewOccurrence: { roverId: number };
 };

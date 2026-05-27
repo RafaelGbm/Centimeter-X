@@ -1,5 +1,5 @@
-import { useCallback, useState } from 'react';
-import { ActivityIndicator, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { useCallback, useLayoutEffect, useState } from 'react';
+import { ActivityIndicator, Alert, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { useFocusEffect } from '@react-navigation/native';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { Ionicons } from '@expo/vector-icons';
@@ -50,6 +50,34 @@ export function RoverDetailScreen({ route, navigation }: Props) {
       load();
     }, [load]),
   );
+
+  useLayoutEffect(() => {
+    navigation.setOptions({
+      headerRight: () => (
+        <Pressable onPress={() => navigation.navigate('RoverForm', { roverId })} hitSlop={8} style={styles.headerBtn}>
+          <Ionicons name="create-outline" size={22} color={colors.primary} />
+        </Pressable>
+      ),
+    });
+  }, [navigation, roverId]);
+
+  function confirmDelete() {
+    Alert.alert('Excluir rover', 'Tem certeza que deseja excluir este rover? Esta ação não pode ser desfeita.', [
+      { text: 'Cancelar', style: 'cancel' },
+      {
+        text: 'Excluir',
+        style: 'destructive',
+        onPress: async () => {
+          try {
+            await roverService.remove(roverId);
+            navigation.goBack();
+          } catch (e) {
+            setActionError((e as ApiError).message);
+          }
+        },
+      },
+    ]);
+  }
 
   async function startSession() {
     setStarting(true);
@@ -139,6 +167,7 @@ export function RoverDetailScreen({ route, navigation }: Props) {
           onPress={() => navigation.navigate('NewOccurrence', { roverId })}
           style={styles.secondaryCta}
         />
+        <PrimaryButton title="Excluir rover" variant="danger" icon="trash-outline" onPress={confirmDelete} style={styles.deleteCta} />
       </ScrollView>
     </Screen>
   );
@@ -170,4 +199,6 @@ const styles = StyleSheet.create({
   actionError: { color: colors.danger, fontSize: fontSize.sm, marginBottom: spacing.sm },
   cta: { marginTop: spacing.sm },
   secondaryCta: { marginTop: spacing.md },
+  deleteCta: { marginTop: spacing.md },
+  headerBtn: { marginRight: spacing.md },
 });
