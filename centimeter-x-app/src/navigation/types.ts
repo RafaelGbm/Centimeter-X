@@ -1,4 +1,5 @@
 import type { NavigatorScreenParams } from '@react-navigation/native';
+import type { Id } from '../types/models';
 
 export type AuthStackParamList = {
   Login: undefined;
@@ -13,8 +14,8 @@ export type MainTabParamList = {
 
 export type AppStackParamList = {
   Tabs: NavigatorScreenParams<MainTabParamList>;
-  RoverDetail: { roverId: number };
-  RoverForm: { roverId?: number } | undefined;
-  SessionStatus: { sessionId: number };
-  NewOccurrence: { roverId: number };
+  RoverDetail: { roverId: Id };
+  RoverForm: { roverId?: Id } | undefined;
+  SessionStatus: { sessionId: Id };
+  NewOccurrence: { roverId: Id };
 };

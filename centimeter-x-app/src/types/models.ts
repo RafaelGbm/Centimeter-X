@@ -4,8 +4,11 @@ export type FixStatus = 'FIX' | 'FLOAT' | 'SINGLE';
 export type CorrectionSource = 'IGS_FINAL' | 'IGS_RAPID' | 'IGS_ULTRA' | 'BROADCAST';
 export type OccurrenceType = 'SIGNAL_LOSS' | 'DRIFT' | 'OBSTRUCTION' | 'OTHER';
 
+// IDs são UUIDs (string) gerados pela API. Em modo mock também são strings.
+export type Id = string;
+
 export interface User {
-  id: number;
+  id: Id;
   name: string;
   email: string;
 }
@@ -19,7 +22,7 @@ export interface AuthResponse {
 }
 
 export interface BaseStation {
-  id: number;
+  id: Id;
   code: string;
   name: string;
   latitude: number;
@@ -31,11 +34,11 @@ export interface BaseStation {
 }
 
 export interface Rover {
-  id: number;
+  id: Id;
   name: string;
   type: RoverType;
   status: RoverStatus;
-  baseStationId?: number;
+  baseStationId?: Id;
   baseStation?: BaseStation;
   latitude?: number;
   longitude?: number;
@@ -45,9 +48,9 @@ export interface Rover {
 }
 
 export interface CorrectionSession {
-  id: number;
-  roverId: number;
-  baseStationId: number;
+  id: Id;
+  roverId: Id;
+  baseStationId: Id;
   baseStationCode?: string;
   constellation: string;
   fixStatus: FixStatus;
@@ -59,8 +62,8 @@ export interface CorrectionSession {
 }
 
 export interface Occurrence {
-  id: number;
-  roverId: number;
+  id: Id;
+  roverId: Id;
   type: OccurrenceType;
   description: string;
   latitude: number;

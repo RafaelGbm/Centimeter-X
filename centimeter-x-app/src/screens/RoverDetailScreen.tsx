@@ -153,7 +153,9 @@ export function RoverDetailScreen({ route, navigation }: Props) {
             <Text style={styles.blockTitle}>Estação-base</Text>
             <Row label="Código" value={rover.baseStation.code} />
             <Row label="Nome" value={rover.baseStation.name} />
-            <Row label="Constelações" value={rover.baseStation.constellations.join(' + ')} />
+            {rover.baseStation.constellations?.length ? (
+              <Row label="Constelações" value={rover.baseStation.constellations.join(' + ')} />
+            ) : null}
           </Card>
         )}
 

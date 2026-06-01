@@ -1,8 +1,9 @@
+import { File, Paths } from 'expo-file-system';
 import { api } from './api';
-import type { Occurrence, OccurrenceType, Page } from '../types/models';
+import type { Id, Occurrence, OccurrenceType, Page } from '../types/models';
 
 export interface OccurrenceInput {
-  roverId: number;
+  roverId: Id;
   type: OccurrenceType;
   description: string;
   latitude: number;
@@ -13,8 +14,14 @@ export interface OccurrenceInput {
 export const occurrenceService = {
   async create(input: OccurrenceInput): Promise<Occurrence> {
     const form = new FormData();
-    form.append(
-      'data',
+
+    // O backend exige que a parte "data" seja application/json. O FormData do React
+    // Native envia partes-string como text/plain (sem content-type), o que a API
+    // rejeita com 415. Por isso gravamos o JSON num arquivo temporário e o anexamos
+    // como parte de arquivo com type "application/json".
+    const dataFile = new File(Paths.cache, `occurrence-data-${Date.now()}.json`);
+    dataFile.create({ overwrite: true });
+    dataFile.write(
       JSON.stringify({
         roverId: input.roverId,
         type: input.type,
@@ -23,6 +30,12 @@ export const occurrenceService = {
         longitude: input.longitude,
       }),
     );
+    form.append('data', {
+      uri: dataFile.uri,
+      name: 'data.json',
+      type: 'application/json',
+    } as unknown as Blob);
+
     form.append('photo', {
       uri: input.photoUri,
       name: `occurrence-${Date.now()}.jpg`,
@@ -36,7 +49,7 @@ export const occurrenceService = {
   },
 
   async list(params?: {
-    roverId?: number;
+    roverId?: Id;
     type?: OccurrenceType;
     page?: number;
     size?: number;

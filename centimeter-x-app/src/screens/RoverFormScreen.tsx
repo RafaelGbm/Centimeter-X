@@ -7,7 +7,7 @@ import { OptionPicker } from '../components/OptionPicker';
 import { PrimaryButton } from '../components/PrimaryButton';
 import { roverService } from '../services/rover.service';
 import { stationService } from '../services/station.service';
-import type { BaseStation, RoverType } from '../types/models';
+import type { BaseStation, Id, RoverType } from '../types/models';
 import type { ApiError } from '../services/api';
 import type { AppStackParamList } from '../navigation/types';
 import { roverTypeLabel } from '../utils/labels';
@@ -27,7 +27,7 @@ export function RoverFormScreen({ route, navigation }: Props) {
 
   const [name, setName] = useState('');
   const [type, setType] = useState<RoverType | null>(null);
-  const [stationId, setStationId] = useState<number | null>(null);
+  const [stationId, setStationId] = useState<Id | null>(null);
   const [stations, setStations] = useState<BaseStation[]>([]);
   const [errors, setErrors] = useState<Record<string, string | null>>({});
   const [formError, setFormError] = useState<string | null>(null);
@@ -52,7 +52,9 @@ export function RoverFormScreen({ route, navigation }: Props) {
       .then((r) => {
         setName(r.name);
         setType(r.type);
-        setStationId(r.baseStationId ?? null);
+        // O detalhe do rover traz a estação aninhada (baseStation.id); o list traz
+        // baseStationId. Aceita ambos para pré-selecionar corretamente na edição.
+        setStationId(r.baseStationId ?? r.baseStation?.id ?? null);
       })
       .catch((e) => setFormError((e as ApiError).message))
       .finally(() => setLoading(false));
@@ -68,7 +70,7 @@ export function RoverFormScreen({ route, navigation }: Props) {
 
     setSaving(true);
     try {
-      const payload = { name: name.trim(), type: type as RoverType, baseStationId: stationId as number };
+      const payload = { name: name.trim(), type: type as RoverType, baseStationId: stationId as Id };
       if (isEdit) {
         await roverService.update(roverId, payload);
       } else {

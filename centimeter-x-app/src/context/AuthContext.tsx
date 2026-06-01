@@ -27,6 +27,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [initializing, setInitializing] = useState(true);
 
   const logout = useCallback(async () => {
+    // Revoga o refresh token no servidor antes de limpar o storage local.
+    // Best-effort: se a rede falhar, o logout local prossegue mesmo assim.
+    try {
+      const refreshToken = await storage.getRefreshToken();
+      if (refreshToken) await authService.logout(refreshToken);
+    } catch {
+      // ignora: o usuário ainda deve sair localmente
+    }
     await storage.clear();
     setUser(null);
   }, []);

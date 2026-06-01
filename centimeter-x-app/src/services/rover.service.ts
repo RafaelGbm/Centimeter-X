@@ -1,10 +1,10 @@
 import { api } from './api';
-import type { Page, Rover, RoverType } from '../types/models';
+import type { Id, Page, Rover, RoverType } from '../types/models';
 
 export interface RoverInput {
   name: string;
   type: RoverType;
-  baseStationId: number;
+  baseStationId: Id;
 }
 
 export const roverService = {
@@ -13,7 +13,7 @@ export const roverService = {
     return data;
   },
 
-  async get(id: number): Promise<Rover> {
+  async get(id: Id): Promise<Rover> {
     const { data } = await api.get<Rover>(`/rovers/${id}`);
     return data;
   },
@@ -23,12 +23,12 @@ export const roverService = {
     return data;
   },
 
-  async update(id: number, input: Partial<RoverInput>): Promise<Rover> {
+  async update(id: Id, input: Partial<RoverInput>): Promise<Rover> {
     const { data } = await api.put<Rover>(`/rovers/${id}`, input);
     return data;
   },
 
-  async remove(id: number): Promise<void> {
+  async remove(id: Id): Promise<void> {
     await api.delete(`/rovers/${id}`);
   },
 };

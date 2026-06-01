@@ -16,4 +16,10 @@ export const authService = {
     const { data } = await api.get<User>('/me');
     return data;
   },
+
+  // Revoga o refresh token no servidor (logout real). Best-effort: falha de rede
+  // não deve impedir o logout local.
+  async logout(refreshToken: string): Promise<void> {
+    await api.post('/auth/logout', { refreshToken });
+  },
 };

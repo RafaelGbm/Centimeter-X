@@ -1,5 +1,5 @@
 import { api } from './api';
-import type { BaseStation } from '../types/models';
+import type { BaseStation, Id } from '../types/models';
 
 export const stationService = {
   async list(params?: { lat?: number; lon?: number }): Promise<BaseStation[]> {
@@ -7,7 +7,7 @@ export const stationService = {
     return data;
   },
 
-  async get(id: number): Promise<BaseStation> {
+  async get(id: Id): Promise<BaseStation> {
     const { data } = await api.get<BaseStation>(`/base-stations/${id}`);
     return data;
   },

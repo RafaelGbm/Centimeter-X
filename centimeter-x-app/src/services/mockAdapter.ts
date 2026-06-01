@@ -1,4 +1,5 @@
 import type { AxiosAdapter, AxiosResponse, InternalAxiosRequestConfig } from 'axios';
+import { File } from 'expo-file-system';
 import { MOCK_CREDENTIALS } from '../config/env';
 import type {
   BaseStation,
@@ -10,30 +11,32 @@ import type {
 
 const LATENCY_MS = 500;
 
-const user = { id: 1, name: 'Operador Teste', email: MOCK_CREDENTIALS.email };
+const user = { id: 'u-1', name: 'Operador Teste', email: MOCK_CREDENTIALS.email };
 
 const stations: BaseStation[] = [
-  { id: 1, code: 'BRAZ', name: 'Brasília IGS Station', latitude: -15.9475, longitude: -47.8779, online: true, constellations: ['GPS', 'GALILEO'], distanceKm: 12.4, lastProductUpdate: new Date().toISOString() },
-  { id: 2, code: 'CHPI', name: 'Cachoeira Paulista', latitude: -22.6871, longitude: -45.0058, online: true, constellations: ['GPS', 'GALILEO'], distanceKm: 38.1, lastProductUpdate: new Date().toISOString() },
-  { id: 3, code: 'POVE', name: 'Porto Velho', latitude: -8.7095, longitude: -63.8965, online: false, constellations: ['GPS'], distanceKm: 120.7 },
+  { id: 'bs-1', code: 'BRAZ', name: 'Brasília IGS Station', latitude: -15.9475, longitude: -47.8779, online: true, constellations: ['GPS', 'GALILEO'], distanceKm: 12.4, lastProductUpdate: new Date().toISOString() },
+  { id: 'bs-2', code: 'CHPI', name: 'Cachoeira Paulista', latitude: -22.6871, longitude: -45.0058, online: true, constellations: ['GPS', 'GALILEO'], distanceKm: 38.1, lastProductUpdate: new Date().toISOString() },
+  { id: 'bs-3', code: 'POVE', name: 'Porto Velho', latitude: -8.7095, longitude: -63.8965, online: false, constellations: ['GPS'], distanceKm: 120.7 },
 ];
 
 let rovers: Rover[] = [
-  { id: 1, name: 'Trator John Deere 01', type: 'AGRICULTURAL', status: 'ACTIVE', baseStationId: 1, baseStation: stations[0], latitude: -15.8400, longitude: -47.8200, lastAccuracyCm: 1.8, lastSessionAt: new Date(Date.now() - 3600_000).toISOString(), createdAt: new Date(Date.now() - 5 * 86400_000).toISOString() },
-  { id: 2, name: 'Drone Mapper 02', type: 'DRONE', status: 'IDLE', baseStationId: 2, baseStation: stations[1], latitude: -22.5100, longitude: -44.8000, lastAccuracyCm: 2.4, lastSessionAt: new Date(Date.now() - 7200_000).toISOString(), createdAt: new Date(Date.now() - 3 * 86400_000).toISOString() },
-  { id: 3, name: 'Colheitadeira 03', type: 'AUTONOMOUS_VEHICLE', status: 'OFFLINE', baseStationId: 1, baseStation: stations[0], latitude: -16.0100, longitude: -47.9500, lastAccuracyCm: undefined, createdAt: new Date(Date.now() - 86400_000).toISOString() },
+  { id: 'rv-1', name: 'Trator John Deere 01', type: 'AGRICULTURAL', status: 'ACTIVE', baseStationId: 'bs-1', baseStation: stations[0], latitude: -15.8400, longitude: -47.8200, lastAccuracyCm: 1.8, lastSessionAt: new Date(Date.now() - 3600_000).toISOString(), createdAt: new Date(Date.now() - 5 * 86400_000).toISOString() },
+  { id: 'rv-2', name: 'Drone Mapper 02', type: 'DRONE', status: 'IDLE', baseStationId: 'bs-2', baseStation: stations[1], latitude: -22.5100, longitude: -44.8000, lastAccuracyCm: 2.4, lastSessionAt: new Date(Date.now() - 7200_000).toISOString(), createdAt: new Date(Date.now() - 3 * 86400_000).toISOString() },
+  { id: 'rv-3', name: 'Colheitadeira 03', type: 'AUTONOMOUS_VEHICLE', status: 'OFFLINE', baseStationId: 'bs-1', baseStation: stations[0], latitude: -16.0100, longitude: -47.9500, lastAccuracyCm: undefined, createdAt: new Date(Date.now() - 86400_000).toISOString() },
 ];
 
 let sessions: CorrectionSession[] = [
-  { id: 1, roverId: 1, baseStationId: 1, baseStationCode: 'BRAZ', constellation: 'GPS+GALILEO', fixStatus: 'FIX', horizontalAccuracyCm: 1.8, verticalAccuracyCm: 3.2, satellitesUsed: 14, correctionSource: 'IGS_RAPID', startedAt: new Date(Date.now() - 3600_000).toISOString() },
-  { id: 2, roverId: 2, baseStationId: 2, baseStationCode: 'CHPI', constellation: 'GPS+GALILEO', fixStatus: 'FLOAT', horizontalAccuracyCm: 18.5, verticalAccuracyCm: 25.0, satellitesUsed: 9, correctionSource: 'IGS_ULTRA', startedAt: new Date(Date.now() - 7200_000).toISOString() },
+  { id: 'se-1', roverId: 'rv-1', baseStationId: 'bs-1', baseStationCode: 'BRAZ', constellation: 'GPS+GALILEO', fixStatus: 'FIX', horizontalAccuracyCm: 1.8, verticalAccuracyCm: 3.2, satellitesUsed: 14, correctionSource: 'IGS_RAPID', startedAt: new Date(Date.now() - 3600_000).toISOString() },
+  { id: 'se-2', roverId: 'rv-2', baseStationId: 'bs-2', baseStationCode: 'CHPI', constellation: 'GPS+GALILEO', fixStatus: 'FLOAT', horizontalAccuracyCm: 18.5, verticalAccuracyCm: 25.0, satellitesUsed: 9, correctionSource: 'IGS_ULTRA', startedAt: new Date(Date.now() - 7200_000).toISOString() },
 ];
 
 let occurrences: Occurrence[] = [
-  { id: 1, roverId: 1, type: 'SIGNAL_LOSS', description: 'Perda de fix próximo à mata', latitude: -15.9512, longitude: -47.8801, createdAt: new Date(Date.now() - 5400_000).toISOString() },
+  { id: 'oc-1', roverId: 'rv-1', type: 'SIGNAL_LOSS', description: 'Perda de fix próximo à mata', latitude: -15.9512, longitude: -47.8801, createdAt: new Date(Date.now() - 5400_000).toISOString() },
 ];
 
-let seq = { rover: 100, session: 100, occurrence: 100 };
+// Gera IDs string únicos (simula os UUIDs da API).
+const seq = { rover: 100, session: 100, occurrence: 100 };
+const nextId = (prefix: string, n: number) => `${prefix}-${n}`;
 
 function ok<T>(data: T, config: InternalAxiosRequestConfig, status = 200): AxiosResponse<T> {
   return { data, status, statusText: 'OK', headers: {}, config };
@@ -71,6 +74,9 @@ export const mockAdapter: AxiosAdapter = async (config) => {
   if (url === 'auth/refresh' && method === 'post') {
     return ok({ accessToken: 'mock-access', refreshToken: 'mock-refresh' }, config);
   }
+  if (url === 'auth/logout' && method === 'post') {
+    return ok(null, config, 204);
+  }
   if (url === 'me' && method === 'get') {
     return ok(user, config);
   }
@@ -90,20 +96,20 @@ export const mockAdapter: AxiosAdapter = async (config) => {
 
   // BASE STATIONS
   if (url === 'base-stations' && method === 'get') return ok(stations, config);
-  const stationMatch = url.match(/^base-stations\/(\d+)$/);
+  const stationMatch = url.match(/^base-stations\/([^/]+)$/);
   if (stationMatch && method === 'get') {
-    const s = stations.find((x) => x.id === Number(stationMatch[1]));
+    const s = stations.find((x) => x.id === stationMatch[1]);
     return s ? ok(s, config) : fail(404, 'Estação não encontrada.');
   }
 
   // ROVERS
   if (url.startsWith('rovers') && !url.includes('/sessions')) {
-    const idMatch = url.match(/^rovers\/(\d+)$/);
+    const idMatch = url.match(/^rovers\/([^/]+)$/);
     if (url === 'rovers' && method === 'get') return ok(page(rovers), config);
     if (url === 'rovers' && method === 'post') {
       const station = stations.find((s) => s.id === body.baseStationId);
       const rover: Rover = {
-        id: ++seq.rover,
+        id: nextId('rv', ++seq.rover),
         name: body.name,
         type: body.type,
         status: 'IDLE',
@@ -117,12 +123,13 @@ export const mockAdapter: AxiosAdapter = async (config) => {
       return ok(rover, config, 201);
     }
     if (idMatch) {
-      const id = Number(idMatch[1]);
+      const id = idMatch[1];
       const rover = rovers.find((r) => r.id === id);
       if (!rover) fail(404, 'Rover não encontrado.');
       if (method === 'get') return ok(rover, config);
       if (method === 'put') {
         Object.assign(rover!, body);
+        if (body.baseStationId) rover!.baseStation = stations.find((s) => s.id === body.baseStationId);
         return ok(rover, config);
       }
       if (method === 'delete') {
@@ -133,14 +140,14 @@ export const mockAdapter: AxiosAdapter = async (config) => {
   }
 
   // SESSIONS
-  const startMatch = url.match(/^rovers\/(\d+)\/sessions$/);
+  const startMatch = url.match(/^rovers\/([^/]+)\/sessions$/);
   if (startMatch && method === 'post') {
-    const roverId = Number(startMatch[1]);
+    const roverId = startMatch[1];
     const rover = rovers.find((r) => r.id === roverId);
     if (!rover) fail(404, 'Rover não encontrado.');
     const station = stations.find((s) => s.id === rover!.baseStationId) ?? stations[0];
     const session: CorrectionSession = {
-      id: ++seq.session,
+      id: nextId('se', ++seq.session),
       roverId,
       baseStationId: station.id,
       baseStationCode: station.code,
@@ -159,9 +166,9 @@ export const mockAdapter: AxiosAdapter = async (config) => {
     return ok(session, config, 201);
   }
   if (url === 'sessions' && method === 'get') return ok(page(sessions), config);
-  const sessionMatch = url.match(/^sessions\/(\d+)$/);
+  const sessionMatch = url.match(/^sessions\/([^/]+)$/);
   if (sessionMatch && method === 'get') {
-    const s = sessions.find((x) => x.id === Number(sessionMatch[1]));
+    const s = sessions.find((x) => x.id === sessionMatch[1]);
     return s ? ok(s, config) : fail(404, 'Sessão não encontrada.');
   }
 
@@ -172,10 +179,19 @@ export const mockAdapter: AxiosAdapter = async (config) => {
     let payload: Record<string, unknown> = {};
     const form = config.data as { _parts?: [string, unknown][] } | undefined;
     const dataPart = form?._parts?.find((p) => p[0] === 'data')?.[1];
-    if (typeof dataPart === 'string') payload = JSON.parse(dataPart);
+    if (typeof dataPart === 'string') {
+      payload = JSON.parse(dataPart);
+    } else if (dataPart && typeof dataPart === 'object' && 'uri' in dataPart) {
+      // A parte "data" agora é um arquivo JSON (application/json); lê o conteúdo.
+      try {
+        payload = JSON.parse(await new File((dataPart as { uri: string }).uri).text());
+      } catch {
+        payload = {};
+      }
+    }
     const occ: Occurrence = {
-      id: ++seq.occurrence,
-      roverId: Number(payload.roverId),
+      id: nextId('oc', ++seq.occurrence),
+      roverId: String(payload.roverId),
       type: payload.type as Occurrence['type'],
       description: String(payload.description ?? ''),
       latitude: Number(payload.latitude),
