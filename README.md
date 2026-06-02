@@ -1,69 +1,144 @@
 <div align="center">
-  <img src="centimeter-x-app/assets/logo.png" alt="Centimeter-X" width="280" />
+  <img src="centimeter-x-app/assets/logo.png" alt="Centimeter-X" width="300" />
 
-  **Posicionamento de alta precisão como serviço**
+  <h1>Centimeter-X</h1>
 
-  Aplicativo mobile da Global Solution FIAP — edição *Space Connect*.
+  <p><strong>Posicionamento GNSS de alta precisão (nível de centímetros) como serviço.</strong></p>
+
+  <p>
+    <img alt="Expo" src="https://img.shields.io/badge/Expo-SDK%2056-000020?logo=expo&logoColor=white" />
+    <img alt="React Native" src="https://img.shields.io/badge/React%20Native-0.85-61DAFB?logo=react&logoColor=black" />
+    <img alt="TypeScript" src="https://img.shields.io/badge/TypeScript-5.x-3178C6?logo=typescript&logoColor=white" />
+    <img alt="Spring Boot" src="https://img.shields.io/badge/Backend-Spring%20Boot%203-6DB33F?logo=springboot&logoColor=white" />
+    <img alt="License" src="https://img.shields.io/badge/license-MIT-blue" />
+  </p>
+
+  <p><em>Global Solution FIAP — edição Space Connect</em></p>
 </div>
 
 ---
 
-## 🎯 Objetivo
+## 📌 Visão geral
 
-O **Centimeter-X** é a plataforma cliente de um serviço de **posicionamento de alta precisão
-(centímetros)**. Ela combina **correção GNSS** (satélites GPS/Galileo, do espaço) com uma rede de
-**estações-base terrestres** para entregar localização em nível de centímetro — algo que o GPS
-comum (3–10 m) não alcança.
+O **Centimeter-X** é o aplicativo cliente de uma plataforma de **High-Precision
+Positioning as a Service**. Ele combina a **correção GNSS** dos satélites (GPS/Galileo) com
+uma rede de **estações-base terrestres** para entregar localização em **nível de
+centímetro** — algo que o GPS comum (3–10 m) não alcança.
 
-O app é o **painel do cliente**: por ele o usuário cadastra seus equipamentos ("rovers"),
-inicia sessões de correção, acompanha a precisão atingida em tempo real e registra ocorrências
-de campo. O processamento pesado (cálculo da correção a partir de dados reais de órbita + solo)
-fica no backend.
+Pelo app, o operador cadastra seus equipamentos ("rovers"), inicia sessões de correção,
+acompanha a precisão atingida em tempo real e registra ocorrências de campo com GPS e
+câmera. O processamento pesado — o cálculo da correção a partir de dados reais de órbita e
+solo — fica no **backend Java/Spring Boot**, que ingere produtos abertos da **NASA (CDDIS /
+IGS)**.
 
 **Clientes-alvo:** agricultura de precisão, veículos autônomos, drones e topografia.
 
-## 🛰️ Tema (Global Solution — Space Connect)
+## 🛰️ Tema — Space Connect
 
 A solução depende intrinsecamente da ponte **espaço + solo**: o sinal dos satélites GNSS é
-corrigido por infraestrutura terrestre e por **produtos abertos da NASA** (CDDIS / IGS — órbitas
-precisas SP3, relógios CLK e observações RINEX). É exatamente o uso de tecnologia espacial para
-resolver desafios reais na Terra proposto pela Global Solution.
+corrigido por infraestrutura terrestre e por **produtos abertos da NASA** — órbitas precisas
+(**SP3**), relógios (**CLK**) e observações (**RINEX**). É o uso de tecnologia espacial para
+resolver desafios reais na Terra.
 
-**ODS relacionadas:** 9 (Indústria e Inovação), 11 (Cidades Sustentáveis), 2 (Fome Zero / agro
-de precisão).
+**ODS relacionadas:** 9 (Indústria e Inovação), 11 (Cidades Sustentáveis), 2 (Fome Zero /
+agricultura de precisão).
 
-## 📱 Funcionalidades
+## ✨ Funcionalidades
 
-- **Login / cadastro** com validação e autenticação JWT.
-- **Dashboard** com resumo da operação (rovers ativos, estações online, última precisão).
-- **Listagem e cadastro de rovers** (busca, pull-to-refresh).
-- **Detalhe do rover** com **mapa** mostrando rover ↔ estação-base e a distância (baseline).
-- **Sessão de correção**: inicia o serviço e exibe a precisão alcançada (FIX/FLOAT/SINGLE),
+- 🔐 **Autenticação JWT** — login e cadastro com validação, *access token* + *refresh token*
+  rotacionável, logout que revoga a sessão no servidor.
+- 📊 **Dashboard** — resumo da operação (rovers ativos, estações online, última precisão).
+- 🚜 **Gestão de rovers** — CRUD completo, busca e *pull-to-refresh*.
+- 🗺️ **Mapa de posicionamento** — rover ↔ estação-base com a *baseline* (km), via OpenStreetMap.
+- 📡 **Sessão de correção** — inicia o serviço e exibe a precisão atingida (FIX/FLOAT/SINGLE),
   satélites usados, constelação e fonte da correção.
-- **Registro de ocorrências de campo** usando **GPS + câmera**.
-- **Histórico** de sessões e ocorrências.
+- 📷 **Ocorrências de campo** — registro georreferenciado com **GPS + câmera**.
+- 🕑 **Histórico** — sessões e ocorrências anteriores.
 
-## 📲 Recurso mobile utilizado
+## 📱 Telas
 
-O app usa **dois recursos nativos**:
+`Login` · `Cadastro` · `Dashboard` · `Lista de rovers` · `Detalhe do rover` ·
+`Sessão / Status de correção` · `Nova ocorrência` · `Histórico`
 
-- **GPS / Localização** (`expo-location`) — georreferencia ocorrências de campo e a posição do
-  rover, refletindo o uso real por operadores de máquinas agrícolas e topógrafos.
-- **Câmera** (`expo-image-picker`) — anexa evidência visual (foto) à ocorrência.
+**Fluxo completo:** `Login → Dashboard → Listar rovers → Detalhe → Iniciar sessão →
+Registrar ocorrência (GPS + foto) → Histórico`.
 
-Há também um **mapa** (`react-native-maps`) que torna explícita a relação espacial
-satélite → estação-base → rover.
+## 🧩 Recursos mobile nativos
+
+| Recurso | Biblioteca | Uso |
+|---|---|---|
+| **GPS / Localização** | `expo-location` | Georreferencia ocorrências e a posição do rover; trata permissão negada |
+| **Câmera** | `expo-image-picker` | Anexa evidência visual (foto) à ocorrência |
+| **Mapa** | `react-native-webview` + Leaflet + OpenStreetMap | Visualiza rover ↔ estação-base sem depender de chave do Google Maps |
+
+## 🏛️ Arquitetura
+
+```
+┌──────────────────────────┐     HTTPS / JSON      ┌──────────────────────────────┐    HTTPS     ┌─────────────────────┐
+│   App Mobile (Expo RN)   │ ───────────────────►  │   API Java Spring Boot       │ ───────────► │   NASA CDDIS / IGS  │
+│                          │ ◄───────────────────  │                              │ ◄─────────── │   (dados GNSS)      │
+│  - screens / components  │   JWT (Authorization) │  - Controllers REST          │  RINEX/SP3/CLK│                     │
+│  - services (axios)      │                       │  - Services (cálculo PPP)    │              │  - Earthdata login  │
+│  - context (Auth)        │                       │  - Ingestor GNSS (@Scheduled)│              │  - IGS products     │
+│  - SecureStore (tokens)  │                       │  - Repositories (JPA)        │              └─────────────────────┘
+│  - expo-location/camera  │                       │  - PostgreSQL / H2 + Flyway  │
+└──────────────────────────┘                       └──────────────────────────────┘
+```
+
+A "precisão em centímetros" usa **dados reais e abertos da NASA**, não simulação: o backend
+compara a órbita/relógio *broadcast* com os produtos *precisos* (SP3/CLK do IGS) para derivar
+a correção e a acurácia por sessão (PPP — *Precise Point Positioning*).
+
+> O backend é mantido em um repositório separado. Este repositório contém o **app mobile** e
+> o contrato que ele consome.
 
 ## 🧱 Stack
 
-- **React Native + Expo** (SDK 56), **TypeScript**
-- **React Navigation** (stack + tabs)
-- **Axios** com interceptors (JWT + refresh automático + tratamento de erros)
-- **AsyncStorage** (sessão), **expo-location**, **expo-image-picker**, **react-native-maps**
+**Mobile**
+- React Native + **Expo** (SDK 56), **TypeScript**
+- **React Navigation** (stack + bottom tabs)
+- **Axios** com interceptors (JWT, *refresh* automático, normalização de erros)
+- **expo-secure-store** (tokens), **AsyncStorage** (cache), **expo-location**,
+  **expo-image-picker**, **react-native-webview** (mapa), **expo-file-system**
 - **expo-linear-gradient** + **@expo/vector-icons** (UI)
 
-Backend (em desenvolvimento): **Java + Spring Boot** consumindo dados reais GNSS da NASA/IGS —
-contrato completo em [`API.md`](API.md) e visão geral em [`SOLUTION.md`](SOLUTION.md).
+**Backend** (repositório separado)
+- Spring Boot 3 (Web, Security, Data JPA, Validation, Scheduling, Actuator)
+- JWT (access + refresh), BCrypt, rate limiting, PostgreSQL (+ PostGIS) / H2, Flyway
+- Cliente para CDDIS/IGS + parser RINEX/SP3 · `springdoc-openapi` (Swagger)
+
+## 🔌 Contrato da API (REST)
+
+Base: `/<host>/api/v1` · `application/json` (exceto upload de foto: `multipart/form-data`) ·
+`Authorization: Bearer <token>` (exceto `/auth/*`) · datas em ISO-8601 UTC.
+
+| Método | Rota | Descrição |
+|---|---|---|
+| `POST` | `/auth/register` | Cria usuário |
+| `POST` | `/auth/login` | Autentica → access + refresh token |
+| `POST` | `/auth/refresh` | Renova o access token |
+| `POST` | `/auth/logout` | Revoga o refresh token |
+| `GET` | `/me` | Usuário logado |
+| `GET·POST·PUT·DELETE` | `/rovers` · `/rovers/{id}` | CRUD de rovers (filtrado por dono) |
+| `GET` | `/base-stations` · `/base-stations/{id}` | Estações-base GNSS |
+| `POST` | `/rovers/{id}/sessions` | Inicia sessão de correção |
+| `GET` | `/sessions` · `/sessions/{id}` | Histórico / status de sessão |
+| `POST·GET` | `/occurrences` | Registra/lista ocorrências (GPS + foto via multipart) |
+| `GET` | `/dashboard` | Resumo da tela inicial |
+
+Listagens são paginadas e envelopadas (`{ content, page, size, totalElements, totalPages }`).
+Erros seguem o formato `{ timestamp, status, error, message, path, fieldErrors }`.
+
+## 🔒 Segurança
+
+- **Autenticação** com access token curto + refresh token rotacionável e revogável (logout
+  real, persistido com hash).
+- **Autorização anti-IDOR**: toda rota com `{id}` filtra pelo usuário do token — recurso de
+  outro usuário retorna `404`.
+- **Tokens no dispositivo** guardados no `expo-secure-store` (Keychain / Keystore).
+- **Rate limiting** em `/auth/*`, **política de senha** (mín. 8 caracteres, BCrypt).
+- **Upload** de foto: `multipart`, máx. 5 MB, validação por *magic bytes*.
+- **Validação de entrada** (Bean Validation) e respostas de erro sem *stack trace*.
 
 ## 📂 Estrutura
 
@@ -72,7 +147,7 @@ centimeter-x-app/
 ├── App.tsx
 ├── app.json
 └── src/
-    ├── components/   # UI reutilizável (botão, card, badge, input, mapa, splash...)
+    ├── components/   # UI reutilizável (botão, card, badge, input, mapa, splash…)
     ├── screens/      # telas (login, dashboard, rovers, sessão, ocorrência, histórico)
     ├── navigation/   # stacks + tabs
     ├── services/     # cliente axios + serviços REST + adaptador mock
@@ -86,7 +161,8 @@ centimeter-x-app/
 
 ## ▶️ Como executar
 
-Pré-requisitos: **Node 18+**, **npm**, e o app **Expo Go** (celular) ou um **emulador Android/iOS**.
+**Pré-requisitos:** Node 18+, npm e o app **Expo Go** (celular) ou um **emulador
+Android/iOS**.
 
 ```bash
 cd centimeter-x-app
@@ -94,40 +170,31 @@ npm install
 npx expo start
 ```
 
-- Pressione **`a`** para abrir no emulador Android (ou **`i`** no iOS), ou escaneie o QR code
-  com o **Expo Go**.
+- Pressione **`a`** (emulador Android) ou **`i`** (iOS), ou escaneie o QR code com o **Expo Go**.
 
 ### Modo de teste (sem backend)
 
-Enquanto a API não está no ar, o app roda com **dados simulados em memória**
-(flag `USE_MOCK` em [`src/config/env.ts`](centimeter-x-app/src/config/env.ts)).
-Na tela de login, toque no box **"Modo de teste"** para preencher as credenciais:
-
-- **E-mail:** `teste@centimeter.com`
-- **Senha:** `teste1234`
+Com a flag `USE_MOCK = true` em [`src/config/env.ts`](centimeter-x-app/src/config/env.ts), o
+app roda com **dados simulados em memória**. Na tela de login, toque no box **"Modo de
+teste"** para preencher as credenciais de demonstração.
 
 ### Apontando para o backend real
 
-Quando o backend Spring Boot estiver disponível, defina `USE_MOCK = false` e ajuste a
-`apiBaseUrl` em [`app.json`](centimeter-x-app/app.json) → `extra.apiBaseUrl`. Em dispositivo
-físico, use o IP da máquina na rede local (ex.: `http://192.168.0.10:8080/api/v1`).
+Defina `USE_MOCK = false` e ajuste `extra.apiBaseUrl` em
+[`app.json`](centimeter-x-app/app.json). Em **emulador Android**, use `http://10.0.2.2:8080/api/v1`;
+em **dispositivo físico**, o IP da máquina na rede local (ex.: `http://192.168.0.10:8080/api/v1`).
 
-> **Mapa no Android:** no Expo Go o mapa renderiza com a chave do próprio Expo. Para um build
-> standalone (APK/AAB), configure a chave do Google Maps em `app.json`
-> (`android.config.googleMaps.apiKey`).
-
-## ✅ Cobertura dos requisitos (rubrica)
+## ✅ Cobertura dos requisitos
 
 | Critério | Onde |
 |---|---|
-| Interface mobile | 9 telas organizadas + componentes reutilizáveis (`src/components`, `src/screens`) |
-| Navegação e fluxo | login → rovers → detalhe → sessão → ocorrência → histórico (`src/navigation`) |
-| Manipulação de dados | serviços REST + estado + AsyncStorage; dados reais NASA/IGS no backend |
-| Recurso mobile | GPS + câmera (`src/hooks`) e mapa (`PositioningMap`) |
-| Tratamento de erros/validações | validações de formulário, permissão negada, falha de rede, 404 |
-| Organização do projeto | estrutura em camadas, TypeScript, este README |
+| Interface mobile | Telas organizadas + componentes reutilizáveis (`src/screens`, `src/components`) |
+| Navegação e fluxo | Login → rovers → detalhe → sessão → ocorrência → histórico (`src/navigation`) |
+| Manipulação de dados | Serviços REST + estado + SecureStore/AsyncStorage; dados reais NASA/IGS no backend |
+| Recursos mobile | GPS + câmera (`src/hooks`) e mapa (`PositioningMap`) |
+| Tratamento de erros/validações | Validação de formulários, permissão negada, falha de rede, 404 |
+| Organização do projeto | Arquitetura em camadas, TypeScript, este README |
 
-## 📄 Documentação adicional
+## 📄 Licença
 
-- [`SOLUTION.md`](SOLUTION.md) — visão da solução, arquitetura e fontes de dados NASA.
-- [`API.md`](API.md) — contrato REST, requisitos de segurança e modelo de dados.
+Distribuído sob a licença **MIT**. Veja [`centimeter-x-app/LICENSE`](centimeter-x-app/LICENSE).
