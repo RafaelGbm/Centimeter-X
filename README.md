@@ -71,6 +71,25 @@ Registrar ocorrência (GPS + foto) → Histórico`.
 | **Câmera** | `expo-image-picker` | Anexa evidência visual (foto) à ocorrência |
 | **Mapa** | `react-native-webview` + Leaflet + OpenStreetMap | Visualiza rover ↔ estação-base sem depender de chave do Google Maps |
 
+### Descrição do recurso mobile utilizado
+
+O **Centimeter-X** utiliza dois recursos nativos do dispositivo, ambos na tela de **Nova
+ocorrência**:
+
+- **GPS / Localização** (`expo-location`) — captura as coordenadas (latitude/longitude) do
+  operador no momento em que ele registra uma ocorrência de campo, georreferenciando o
+  problema relatado. A mesma localização é usada para estimar a posição do rover ao iniciar
+  uma sessão de correção.
+- **Câmera** (`expo-image-picker`) — abre a câmera do aparelho para o operador anexar uma
+  **foto como evidência visual** da ocorrência (perda de sinal, obstrução, deriva), que é
+  enviada ao backend junto com os dados.
+
+Esses recursos refletem o uso real por **operadores de máquinas agrícolas e topógrafos** em
+campo. O app trata explicitamente a **permissão negada** de GPS e câmera, exibindo mensagem
+clara e orientando o usuário a habilitar o acesso nas configurações. Há ainda um **mapa**
+(Leaflet + OpenStreetMap) que torna visível a relação espacial **rover ↔ estação-base** e a
+*baseline* entre eles.
+
 ## 🏛️ Arquitetura
 
 ```
